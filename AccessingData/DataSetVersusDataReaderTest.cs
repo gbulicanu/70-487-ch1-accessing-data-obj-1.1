@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
 
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -60,6 +62,69 @@ namespace AccessingData
                 customerTable.Rows[0].ItemArray[customerTable.Columns["customerId"].Ordinal],
                 Is.EqualTo(customerId),
                 "The record returned has and ID different than expected.");
+        }
+
+        [TestCase(3)]
+        public void GetCustomersWithDateReader(int customerId)
+        {
+            // Arrange
+            var sqlBuilder = new StringBuilder()
+                .Append("SELECT FirstName, LastName, CustomerId, AccountId")
+                .Append(" FROM [dbo].[Customer] WHERE CustomerId = @CustomerId");
+            var customers = new List<Tuple<string, string, int, int>>();
+
+            // Act
+            // Assumes an app.config has connection string added to <connectionString />
+            // section named "TestDB"
+            using (var sqlConnection = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["TestDB"].ConnectionString))
+            {
+                using (var sqlCommand = new SqlCommand(
+                    sqlBuilder.ToString(),
+                    sqlConnection))
+                {
+                    sqlCommand.Parameters.AddWithValue("@CustomerId", customerId);
+                    sqlConnection.Open();
+                    using (var sqlDataReader = sqlCommand.ExecuteReader())
+                    {
+                        try
+                        {
+                            if (sqlDataReader.HasRows)
+                            {
+                                while (sqlDataReader.Read())
+                                {
+                                    var customer = new Tuple<string, string, int, int>(
+                                        sqlDataReader.GetString(0),
+                                        sqlDataReader.GetString(1),
+                                        sqlDataReader.GetInt32(2),
+                                        sqlDataReader.GetInt32(3));
+                                    customers.Add(customer);
+
+                                }
+                            }
+                        }
+                        finally
+                        {
+                            // This should be already closed even if we encounter an e
+                            if (sqlConnection.State != ConnectionState.Closed)
+                            {
+                                sqlConnection.Close();
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Assert
+            Assert.That(
+                customers.Count,
+                Is.EqualTo(1),
+                "We expected exactly 1 record to be returned.");
+            Assert.That(
+                customers[0].Item3,
+                Is.EqualTo(customerId),
+                "The record returned has and ID different than expected.");
+
         }
     }
 }
