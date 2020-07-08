@@ -1,5 +1,8 @@
-﻿using NUnit.Framework;
+﻿using InteractivePreGeneratedViews;
 
+using NUnit.Framework;
+
+using System;
 using System.Linq;
 
 namespace AccessingData
@@ -13,6 +16,11 @@ namespace AccessingData
         public void Setup()
         {
             entities = new TestEntities();
+            InteractiveViews.SetViewCacheFactory(
+                entities,
+                new FileViewCacheFactory(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                    @"\70487AccessingData\EFCache\Cache.xml"));
         }
 
         [OneTimeTearDown]
@@ -21,6 +29,7 @@ namespace AccessingData
             entities.Dispose();
         }
 
+        [TestCase(2)]
         [TestCase(3)]
         public void GetCustomerById(int customerId) 
         {

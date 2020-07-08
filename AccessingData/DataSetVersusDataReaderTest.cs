@@ -12,6 +12,7 @@ namespace AccessingData
     [TestFixture]
     public class DataSetVersusDataReaderTest
     {
+        [TestCase(2)]
         [TestCase(3)]
         public void GetCustomersWithDataAdapter(int customerId)
         {
@@ -64,6 +65,7 @@ namespace AccessingData
                 "The record returned has and ID different than expected.");
         }
 
+        [TestCase(2)]
         [TestCase(3)]
         public void GetCustomersWithDateReader(int customerId)
         {
