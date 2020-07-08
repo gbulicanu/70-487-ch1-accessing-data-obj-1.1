@@ -91,15 +91,19 @@ namespace AccessingData
                         {
                             if (sqlDataReader.HasRows)
                             {
+                                var firstNameOrdinal = sqlDataReader.GetOrdinal("FirstName");
+                                var lastNameOrdinal = sqlDataReader.GetOrdinal("LastName");
+                                var customerIdOrdinal = sqlDataReader.GetOrdinal("CustomerId");
+                                var accountIdOrdinal = sqlDataReader.GetOrdinal("AccountId");
+
                                 while (sqlDataReader.Read())
                                 {
                                     var customer = new Tuple<string, string, int, int>(
-                                        sqlDataReader.GetString(0),
-                                        sqlDataReader.GetString(1),
-                                        sqlDataReader.GetInt32(2),
-                                        sqlDataReader.GetInt32(3));
+                                        sqlDataReader.GetString(firstNameOrdinal),
+                                        sqlDataReader.GetString(lastNameOrdinal),
+                                        sqlDataReader.GetInt32(customerIdOrdinal),
+                                        sqlDataReader.GetInt32(accountIdOrdinal));
                                     customers.Add(customer);
-
                                 }
                             }
                         }
