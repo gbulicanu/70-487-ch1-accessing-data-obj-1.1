@@ -1,6 +1,12 @@
-# Practice code while reading MS Press - Developing Windows Azure and Web Services - Exam Ref: 70-487 - Objective 1.1 - Accessing Data
+# Practice code while reading MS Press - Developing Windows Azure and Web Services - Exam Ref: 70-487 - Accessing Data
 
-Difference between SqlDataAdapter and SqlDataReader
+## Objective 1.1 - Chosing data access technology
+
+### Difference between SqlDataAdapter and SqlDataReader
+
+### Chosing EF as the data access technology
+
+### Chosing WCF Data Services as the data access technology
 
 ## Prerequisites
 
